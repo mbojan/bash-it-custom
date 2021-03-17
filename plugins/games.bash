@@ -10,7 +10,7 @@ function dcss {
            new-window crawl \; 
 }
 
-function cddab {
+function cdda-b {
 	about 'Launch CDDA in byobu in tmux with wiki in background'
 	group 'michal'
 
