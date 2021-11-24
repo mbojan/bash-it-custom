@@ -81,9 +81,16 @@ function r-github {
 	param '1: user/repo string to GH repository with the package'
 	group 'r'
 
-	Rscript -e "remotes::install_github(\"$1\", build_vignettes=TRUE, force=TRUE)"
+	Rscript -e "remotes::install_github(\"$1\", build_vignettes=FALSE, force=TRUE)"
 }
 
+function r-githubv {
+	about 'install R package from GitHub'
+	param '1: user/repo string to GH repository with the package'
+	group 'r'
+
+	Rscript -e "remotes::install_github(\"$1\", build_vignettes=TRUE, force=TRUE)"
+}
 
 function r-render {
 	about 'run rmarkdown::render() via Rscript'
