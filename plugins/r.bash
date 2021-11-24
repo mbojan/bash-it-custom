@@ -88,8 +88,9 @@ function r-github {
 function r-render {
 	about 'run rmarkdown::render() via Rscript'
 	param '1: name of Rmd file to render'
+	param '2: list-like structure to params= argument'
 	group 'r'
 
-	Rscript -e "rmarkdown::render(\"$1\", params=list($2) )"
+	Rscript -e "rmarkdown::render(\"$1\", params=list($2))"
 }
 
