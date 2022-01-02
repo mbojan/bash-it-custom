@@ -106,6 +106,6 @@ function r-tangle {
 	param '1: name of the Rmd file to tangle'
 	group 'r'
 
-	Rscript -e 'knitr::knit(\"$1\", tangle=TRUE)'
+	Rscript -e "knitr::knit(\"$1\", tangle=TRUE)"
 }
 
