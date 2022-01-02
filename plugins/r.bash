@@ -101,3 +101,11 @@ function r-render {
 	Rscript -e "rmarkdown::render(\"$1\", params=list($2))"
 }
 
+function r-tangle {
+	about 'run knitr::knit(tangle=TRUE) on the Rmd document'
+	param '1: name of the Rmd file to tangle'
+	group 'r'
+
+	Rscript -e 'knitr::knit(\"$1\", tangle=TRUE)'
+}
+
