@@ -6,7 +6,7 @@ function swapstats {
 	group "system"
 
 	for file in /proc/*/status ; do 
-		awk '/VmSwap|Name/{printf $2 " " $3}END{ print ""}' $file; 
+		awk '/VmSwap|Name/{printf $2 "\t" $3}/kB|MB/ END{print ""}' $file; 
 	done
 }
 
