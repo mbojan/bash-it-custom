@@ -18,6 +18,19 @@ function icm {
 			shift
 		;;
 
+		mount)
+			echo "Mounting ICM at ~/mnt/icm"
+			mkdir -p ~/mnt/icm
+			sshfs mbojan@hpc:/lu/topola/home/mbojan ~/mnt/icm;
+			shift
+		;;
+
+		unmount)
+			echo "Unmounting ICM from ~/mnt/icm"
+			fusermount3 -u ~/mnt/icm;
+			shift
+		;;
+
 		*) 
 			echo "Checking for connection"
 			ssh -S ~/.ssh/mbojan@hpc.icm.edu.pl\:22 -O check hpc;
