@@ -101,6 +101,33 @@ function r-render {
 	Rscript -e "rmarkdown::render(\"$1\", params=list($2))"
 }
 
+function r-render-docx {
+	about 'run rmarkdown::render() via Rscript'
+	param '1: name of Rmd file to render'
+	param '2: list-like structure to params= argument'
+	group 'r'
+
+	Rscript -e "rmarkdown::render(\"$1\", params=list($2), output_format=\"bookdown::word_document2\")"
+}
+
+function r-render-html {
+	about 'run rmarkdown::render() via Rscript'
+	param '1: name of Rmd file to render'
+	param '2: list-like structure to params= argument'
+	group 'r'
+
+	Rscript -e "rmarkdown::render(\"$1\", params=list($2), output_format=\"bookdown::html_document2\")"
+}
+
+function r-render-pdf {
+	about 'run rmarkdown::render() via Rscript'
+	param '1: name of Rmd file to render'
+	param '2: list-like structure to params= argument'
+	group 'r'
+
+	Rscript -e "rmarkdown::render(\"$1\", params=list($2), output_format=\"bookdown::pdf_document2\")"
+}
+
 function r-tangle {
 	about 'run knitr::knit(tangle=TRUE) on the Rmd document'
 	param '1: name of the Rmd file to tangle'
