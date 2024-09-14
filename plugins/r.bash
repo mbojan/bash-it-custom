@@ -141,9 +141,16 @@ function rpkg-testfile {
 	param '1: path to R script'
 	group 'r'
 
+	echo Testing $1
 	Rscript -e "testthat::test_file(\"$1\")"
 }
 
 function rpkg-testmonitor {
-	while inotifywait -e modify $1; do rpkg-testfile $2; done
+	about 'monitor file $1 and source $2 when $1 is modified'
+	param '1: path being modified'
+	param '2: path to R script to be sourced'
+	group 'r'
+
+	while inotifywait -qe modify $1; do rpkg-testfile $2; done
 }
+
