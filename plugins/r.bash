@@ -136,3 +136,14 @@ function r-tangle {
 	Rscript -e "knitr::knit(\"$1\", tangle=TRUE)"
 }
 
+function rpkg-testfile {
+	about 'run testthat::test_file() on a file'
+	param '1: path to R script'
+	group 'r'
+
+	Rscript -e "testthat::test_file(\"$1\")"
+}
+
+function rpkg-testmonitor {
+	while inotifywait -e modify $1; do rpkg-testfile $2; done
+}
