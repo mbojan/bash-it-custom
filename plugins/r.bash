@@ -141,7 +141,7 @@ function rbbt-bib {
 	param '1: name of Rmd/Qmd/md file to process'
 	group 'r'
 
-	Rscript -e "rbbt::bbt_update_bib(\"$1\")"
+	Rscript -e "rbbt::bbt_update_bib(path_rmd=\"$1\", path_bib=\"zotero.bib\")"
 }
 
 function rpkg-testfile {
