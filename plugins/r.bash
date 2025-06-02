@@ -136,6 +136,14 @@ function r-tangle {
 	Rscript -e "knitr::knit(\"$1\", tangle=TRUE)"
 }
 
+function rbbt-bib {
+	about 'run rbbt::bbt_update_bib() on a file to generate local bib'
+	param '1: name of Rmd/Qmd/md file to process'
+	group 'r'
+
+	Rscript -e "rbbt::bbt_update_bib(\"$1\")"
+}
+
 function rpkg-testfile {
 	about 'run testthat::test_file() on a file'
 	param '1: path to R script'
