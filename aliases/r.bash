@@ -12,3 +12,6 @@ alias rpkg-build='Rscript -e "devtools::build()"'
 alias rpkg-check='Rscript -e "devtools::check()"'
 alias rpkg-test='Rscript -e "testthat::test_local()"'
 alias rpkg-document='Rscript -e "devtools::document()"'
+alias renv-status='Rscript -e "renv::status()"'
+alias renv-restore='Rscript -e "renv::restore()"'
+
