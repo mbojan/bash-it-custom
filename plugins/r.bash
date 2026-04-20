@@ -162,3 +162,119 @@ function rpkg-testmonitor {
 	while inotifywait -qe modify $1; do rpkg-testfile $2; done
 }
 
+
+
+
+function install-positron {
+	about 'install Positron'
+	group 'r'
+
+	local old_opts
+	old_opts=$(set -o)
+	# set -euo pipefail
+
+	local ARCH=$(uname -m)
+	case "$ARCH" in
+		x86_64) local POSIT_ARCH="x64" ;;
+		aarch64|arm64) local POSIT_ARCH="arm64" ;;
+		*) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+	esac
+
+	local RELEASE_URL="https://github.com/posit-dev/positron/releases"
+	local TMPFILE="/tmp/positron-latest.deb"
+
+	echo "Finding latest Positron .deb for $POSIT_ARCH..."
+	local DEB_URL=$(curl -fsSL "$RELEASE_URL" \
+		| grep -Eo "https://cdn\.posit\.co/[A-Za-z0-9/_\.-]+Positron-[0-9\.~-]+-${POSIT_ARCH}\.deb" \
+		| head -n 1)
+
+	if [ -z "${DEB_URL:-}" ]; then
+		echo "Could not find a .deb link for ${POSIT_ARCH} on the releases page"
+		exit 1
+	fi
+
+	echo "Downloading: $DEB_URL"
+	curl -fL "$DEB_URL" -o "$TMPFILE"
+
+	echo "Installing Positron..."
+	sudo apt install -y "$TMPFILE"
+
+	echo "Cleaning up..."
+	rm -f "$TMPFILE"
+
+	echo "Done."
+
+	# Reset old options
+	# eval "$old_opts"
+}
+
+
+
+
+
+# function install-rstudio {
+# 	about 'install RStudio'
+# 	group 'r'
+# 
+# 	local old_opts
+# 	old_opts=$(set -o)
+# 	# set -euo pipefail
+# 
+# 	# --- Detect architecture ---
+# 	local ARCH=$(uname -m)
+# 	case "$ARCH" in
+# 	  x86_64) local RSTUDIO_ARCH="amd64" ;;
+# 	  aarch64|arm64) local RSTUDIO_ARCH="arm64" ;;
+# 	  *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+# 	esac
+# 
+# 	# --- Detect Ubuntu base ---
+# 	local DISTRO=$(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || true)
+# 	[ -z "$DISTRO" ] && local DISTRO="noble"
+# 
+# 	# --- Define paths ---
+# 	local TMPFILE="/tmp/rstudio-latest.deb"
+# 	local LOGFILE="/var/log/rstudio_update.log"
+# 
+# 	echo "Detected Ubuntu base: ${DISTRO}"
+# 	echo "Fetching latest version number from Posit..."
+# 
+# 	# --- Get version from Posit's official RStudio Desktop page ---
+# 	local VERSION=$(curl -s https://posit.co/download/rstudio-desktop/ \
+# 	  | grep -Eo 'rstudio-[0-9]+\.[0-9]+\.[0-9]+-[0-9]+' \
+# 	  | head -n 1 \
+# 	  | sed -E 's/rstudio-([0-9]+\.[0-9]+\.[0-9]+-[0-9]+)/\1/')
+# 
+# 	if [ -z "$VERSION" ]; then
+# 	  echo "Error: Could not extract the latest RStudio version number from Posit's site."
+# 	  exit 1
+# 	fi
+# 
+# 	echo "Latest RStudio version detected: ${VERSION}"
+# 
+# 	# --- Construct download URL (Jammy build for Noble until Noble builds exist) ---
+# 	local BASE_DISTRO="jammy"
+# 	local BASE_URL="https://download1.rstudio.org/electron/${BASE_DISTRO}/${RSTUDIO_ARCH}"
+# 	local FULL_URL="${BASE_URL}/rstudio-${VERSION}-${RSTUDIO_ARCH}.deb"
+# 
+# 	echo "Downloading from:"
+# 	echo "  ${FULL_URL}"
+# 
+# 	# --- Validate URL before downloading ---
+# 	if ! curl --head --silent --fail "$FULL_URL" >/dev/null; then
+# 	  echo "Error: The expected RStudio package was not found at ${FULL_URL}"
+# 	  exit 1
+# 	fi
+# 
+# 	# --- Download and install ---
+# 	curl -L "$FULL_URL" -o "$TMPFILE"
+# 	echo "Installing RStudio..."
+# 	sudo apt install -y "$TMPFILE" | tee -a "$LOGFILE"
+# 
+# 	# --- Clean up ---
+# 	rm -f "$TMPFILE"
+# 	echo "RStudio update to version ${VERSION} completed successfully." | tee -a "$LOGFILE"
+# 
+# 	# Reset old options
+# 	# eval "$old_opts"
+# }
