@@ -209,6 +209,37 @@ function install-positron {
 }
 
 
+function r-deps {
+	about 'list R packages mentioned in R, Quarto and RMarkdown files'
+	param '1: path; defaults to current folder'
+
+	local dir="${1:-.}"
+
+	local pkg_re='\b(?:library|require)\("\K[A-Za-z0-9]+(?="\))'
+	local pkg_re+='|\b(?:library|require)\(\K[A-Za-z0-9]+(?=\))'
+	local pkg_re+='|\b(?:requireNamespace|loadNamespace|attachNamespace)\("\K[A-Za-z0-9]+(?="\))'
+	local pkg_re+='|\b(?:library|require|requireNamespace|loadNamespace|attachNamespace)\(package\s*=\s*"\K[A-Za-z0-9]+(?="\))'
+	local pkg_re+='|\b(?:library|require)\(package\s*=\s*\K[A-Za-z0-9]+(?=\))'
+	local pkg_re+='|\b[A-Za-z0-9]+(?=::)'
+
+	local files=()
+	while IFS= read -r -d '' f; do
+	  files+=("$f")
+	done < <(find "$dir" -type f \( -name '*.R' -o -name '*.Rmd' -o -name '*.qmd' \) -print0)
+
+	if [ ${#files[@]} -eq 0 ]; then
+	  exit 0
+	fi
+
+	{
+	  grep -ohP "$pkg_re" "${files[@]}"
+	  grep -ohP '(?<=p_load\()[^)]*' "${files[@]}" \
+	    | tr ',' '\n' \
+	    | sed -E 's/^[[:space:]]*"?//; s/"?[[:space:]]*$//' \
+	    | grep -xE '[A-Za-z0-9]+'
+	} | sort -u
+}
+
 
 
 
