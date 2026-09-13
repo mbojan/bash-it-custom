@@ -63,7 +63,7 @@ r-update() (
 	MAKE="make -j${CORES}" ${SUDO} Rscript -e "update.packages(lib=.libPaths()[${LIBINDEX}], ask=FALSE, checkBuilt=TRUE)"
 )
 
-function r-install {
+function r-installp {
 	about 'install R package parallelled'
 	param '1: name of the package to install'
 	group 'r'
@@ -74,6 +74,15 @@ function r-install {
 
 	echo Installing package $1 using $USE_CORES cores
 	MAKE="make -j$USE_CORES" Rscript -e "install.packages(\"$1\")"
+}
+
+function r-install {
+	about 'install R package'
+	param '1: name of the package to install'
+	group 'r'
+
+	echo Installing package $1 using 1 core
+	Rscript -e "install.packages(\"$1\")"
 }
 
 function r-github {
